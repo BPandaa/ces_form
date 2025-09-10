@@ -59,7 +59,7 @@ export async function GET() {
       success: true,
       message: 'Database connection successful',
       tableExists,
-      columns: tableExists ? columnCheck.recordset : null,
+      columns: tableExists && columnCheck ? columnCheck.recordset : null,
       timestamp: new Date().toISOString()
     });
 
