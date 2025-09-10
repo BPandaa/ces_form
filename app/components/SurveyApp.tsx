@@ -10,10 +10,12 @@ export default function SurveyApp() {
   const [site, setSite] = useState<string | null>(null);
 
   useEffect(() => {
-    // Extract site parameter from URL on component mount
-    const urlParams = new URLSearchParams(window.location.search);
-    const siteParam = urlParams.get('site');
-    setSite(siteParam);
+    // Extract site parameter from URL on component mount (only in browser)
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteParam = urlParams.get('site');
+      setSite(siteParam);
+    }
   }, []);
 
   const handleStartSurvey = () => {

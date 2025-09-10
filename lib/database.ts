@@ -36,6 +36,7 @@ export interface SurveyData {
 
 export async function saveSurveyResponse(
   surveyData: SurveyData,
+  site?: string,
   ipAddress?: string,
   userAgent?: string
 ): Promise<number> {
@@ -62,6 +63,7 @@ export async function saveSurveyResponse(
       .input('Recommend', sql.NVarChar(10), surveyData.recommend)
       .input('Improvements', sql.NVarChar(sql.MAX), surveyData.improvements || null)
       .input('Positives', sql.NVarChar(sql.MAX), surveyData.positives || null)
+      .input('Site', sql.NVarChar(100), site || null)
       .input('IPAddress', sql.NVarChar(45), ipAddress || null)
       .input('UserAgent', sql.NVarChar(500), userAgent || null)
       .query(`
@@ -71,7 +73,7 @@ export async function saveSurveyResponse(
           InstallationQuality, InstallationFeedback, InstallationProfessionalism,
           InstallationProfessionalismFeedback, CustomerCare, ServiceTeamRating,
           ServiceTeamFeedback, OverallSatisfaction, OverallFeedback, Recommend,
-          Improvements, Positives, IPAddress, UserAgent
+          Improvements, Positives, Site, IPAddress, UserAgent
         ) 
         OUTPUT INSERTED.ID
         VALUES (
@@ -80,7 +82,7 @@ export async function saveSurveyResponse(
           @InstallationQuality, @InstallationFeedback, @InstallationProfessionalism,
           @InstallationProfessionalismFeedback, @CustomerCare, @ServiceTeamRating,
           @ServiceTeamFeedback, @OverallSatisfaction, @OverallFeedback, @Recommend,
-          @Improvements, @Positives, @IPAddress, @UserAgent
+          @Improvements, @Positives, @Site, @IPAddress, @UserAgent
         )
       `);
     
