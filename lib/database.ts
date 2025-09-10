@@ -3,9 +3,9 @@ import sql from 'mssql';
 const config: sql.config = {
   server: process.env.SQL_SERVER!,
   port: Number(process.env.SQL_PORT),
-  database: process.env.SQL_DATABASE!, // Replace with your actual database name
-  user: process.env.SQL_USER!, // Replace with your actual username
-  password: process.env.SQL_PASSWORD!, // Replace with your actual password
+  database: process.env.SQL_DATABASE!, 
+  user: process.env.SQL_USER!, 
+  password: process.env.SQL_PASSWORD!, 
   options: {
     encrypt: true,
     trustServerCertificate: true
@@ -36,7 +36,6 @@ export interface SurveyData {
 
 export async function saveSurveyResponse(
   surveyData: SurveyData,
-  site?: string,
   ipAddress?: string,
   userAgent?: string
 ): Promise<number> {
@@ -63,7 +62,6 @@ export async function saveSurveyResponse(
       .input('Recommend', sql.NVarChar(10), surveyData.recommend)
       .input('Improvements', sql.NVarChar(sql.MAX), surveyData.improvements || null)
       .input('Positives', sql.NVarChar(sql.MAX), surveyData.positives || null)
-      .input('Site', sql.NVarChar(100), site || null)
       .input('IPAddress', sql.NVarChar(45), ipAddress || null)
       .input('UserAgent', sql.NVarChar(500), userAgent || null)
       .query(`
@@ -73,7 +71,7 @@ export async function saveSurveyResponse(
           InstallationQuality, InstallationFeedback, InstallationProfessionalism,
           InstallationProfessionalismFeedback, CustomerCare, ServiceTeamRating,
           ServiceTeamFeedback, OverallSatisfaction, OverallFeedback, Recommend,
-          Improvements, Positives, Site, IPAddress, UserAgent
+          Improvements, Positives, IPAddress, UserAgent
         ) 
         OUTPUT INSERTED.ID
         VALUES (
@@ -82,27 +80,14 @@ export async function saveSurveyResponse(
           @InstallationQuality, @InstallationFeedback, @InstallationProfessionalism,
           @InstallationProfessionalismFeedback, @CustomerCare, @ServiceTeamRating,
           @ServiceTeamFeedback, @OverallSatisfaction, @OverallFeedback, @Recommend,
-          @Improvements, @Positives, @Site, @IPAddress, @UserAgent
+          @Improvements, @Positives, @IPAddress, @UserAgent
         )
       `);
     
     await pool.close();
     return result.recordset[0].ID;
   } catch (error) {
-    // Log detailed error for debugging
     console.error('Database error:', error);
-    console.error('Database error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : 'No stack trace',
-      timestamp: new Date().toISOString(),
-      config: {
-        server: config.server,
-        database: config.database,
-        user: config.user
-      }
-    });
-    
-    // Throw a generic error to avoid exposing database details
     throw new Error('Failed to save survey response');
   }
 }
