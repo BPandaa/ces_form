@@ -7,7 +7,7 @@ const config: sql.config = {
   user: process.env.SQL_USER!, // Replace with your actual username
   password: process.env.SQL_PASSWORD!, // Replace with your actual password
   options: {
-    encrypt: false,
+    encrypt: true,
     trustServerCertificate: true
   }
 };
