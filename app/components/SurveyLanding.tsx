@@ -27,7 +27,7 @@ export default function SurveyLanding({ onStartSurvey }: SurveyLandingProps) {
           {/* Logo */}
           <div className="mb-8">
             <Image
-              src="/rml_group_transparent.png"
+              src="/rml_group_transparent_01.png"
               alt="RML Group Logo"
               width={250}
               height={125}
